@@ -4,7 +4,7 @@
 #include <itkImageFileWriter.h>
 #include <itkMaskImageFilter.h>
 #include <itkMaskNegatedImageFilter.h>
-#include <itkSubtractImageFilter.h>
+#include <itkAbsoluteValueDifferenceImageFilter.h>
 #include <itkStatisticsImageFilter.h>
 
 // TCLAP includes
@@ -109,7 +109,7 @@ int main (int argc, char **argv)
   using MaskReaderType = itk::ImageFileReader<MaskType>;
   using MaskImageFilter = itk::MaskImageFilter<ImageType, MaskType, ImageType>;
   using MaskNegatedImageFilter = itk::MaskNegatedImageFilter<ImageType, MaskType, ImageType>;
-  using SubtractImageFilter = itk::SubtractImageFilter<ImageType, ImageType>;
+  using AbsoluteValueDifferenceImageFilter = itk::AbsoluteValueDifferenceImageFilter<ImageType, ImageType, ImageType>;
   using StatisticsImageFilter = itk::StatisticsImageFilter<ImageType>;
 
   // =========================================================================
@@ -218,10 +218,10 @@ int main (int argc, char **argv)
   // =========================================================================
   // Compute the difference image
   // =========================================================================
-  auto subtractImageFilter = SubtractImageFilter::New();
-  subtractImageFilter->SetInput1(maskedImageAOutput);
-  subtractImageFilter->SetInput2(maskedImageBOutput);
-  subtractImageFilter->Update();
+  auto absoluteValueDifferenceImageFilter = AbsoluteValueDifferenceImageFilter::New();
+  absoluteValueDifferenceImageFilter->SetInput1(maskedImageAOutput);
+  absoluteValueDifferenceImageFilter->SetInput2(maskedImageBOutput);
+  absoluteValueDifferenceImageFilter->Update();
 
 
   // =========================================================================
@@ -231,7 +231,7 @@ int main (int argc, char **argv)
   {
     auto differenceWriter = ImageWriterType::New();
     differenceWriter->SetFileName(differenceImage.c_str());
-    differenceWriter->SetInput(subtractImageFilter->GetOutput());
+    differenceWriter->SetInput(absoluteValueDifferenceImageFilter->GetOutput());
     differenceWriter->Write();
   }
 
@@ -239,7 +239,7 @@ int main (int argc, char **argv)
   // Compute the difference image statistics
   // =========================================================================
   auto imageStatisticsFilter = StatisticsImageFilter::New();
-  imageStatisticsFilter->SetInput(subtractImageFilter->GetOutput());
+  imageStatisticsFilter->SetInput(absoluteValueDifferenceImageFilter->GetOutput());
   imageStatisticsFilter->Update();
 
   auto mean = imageStatisticsFilter->GetMean();
