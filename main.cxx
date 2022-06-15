@@ -247,10 +247,10 @@ int main (int argc, char **argv)
   auto min = imageStatisticsFilter->GetMinimum();
   auto sigma = imageStatisticsFilter->GetSigma();
 
-  std::cout << "Mean difference:" << mean << std::endl;
-  std::cout << "Max. difference:" << max << std::endl;
-  std::cout << "Min. difference:" << min<< std::endl;
-  std::cout << "Sigma difference:" << sigma << std::endl;
+  std::cout << "Mean difference:" << mean << ";" << std::endl;
+  std::cout << "Max. difference:" << max << ";" << std::endl;
+  std::cout << "Min. difference:" << min<< ";" << std::endl;
+  std::cout << "Sigma difference:" << sigma << ";" << std::endl;
 
   if (mean > meanTolerance ||
       max > maxTolerance   ||
